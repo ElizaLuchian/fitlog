@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
+
+    <!-- Header with back arrow and title -->
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:navigationIcon="@android:drawable/ic_menu_revert"
+                app:title="Outfit Details"
+                app:titleTextColor="@android:color/black"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <!-- Outfit Image -->
+            <ImageView
+                    android:id="@+id/outfitImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+                    android:background="@color/gray_light"
+                    android:contentDescription="Outfit photo"/>
+
+            <!-- Outfit Details -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                <!-- Date -->
+                <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:layout_marginBottom="8dp"/>
+
+                <!-- Style Tag -->
+                <TextView
+                        android:id="@+id/tvStyleTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/red_primary"
+                        android:background="@drawable/pill_tag_bg"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:layout_marginBottom="24dp"/>
+
+                <!-- Occasion Field -->
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Occasion"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_dark"
+                        android:layout_marginBottom="4dp"/>
+
+                <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp"
+                        android:background="@color/gray_light"
+                        android:padding="12dp"
+                        android:layout_marginBottom="16dp">
+
+                    <TextView
+                            android:id="@+id/tvOccasion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"/>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Notes Field -->
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Notes"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_dark"
+                        android:layout_marginBottom="4dp"/>
+
+                <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp"
+                        android:background="@color/gray_light"
+                        android:padding="12dp"
+                        android:layout_marginBottom="24dp">
+
+                    <TextView
+                            android:id="@+id/tvNotes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/black"/>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Edit Button -->
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Edit Outfit"
+                        android:textColor="@color/white"
+                        android:icon="@drawable/ic_edit"
+                        android:iconTint="@color/white"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:backgroundTint="@color/red_primary"
+                        android:layout_marginBottom="12dp"
+                        style="@style/Widget.MaterialComponents.Button" />
+
+                <!-- Delete Button -->
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDelete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Delete Outfit"
+                        android:textColor="@color/red_primary"
+                        android:icon="@drawable/ic_delete"
+                        android:iconTint="@color/red_primary"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:strokeColor="@color/red_primary"
+                        app:strokeWidth="1dp"
+                        app:backgroundTint="@color/white"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
