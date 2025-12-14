@@ -1,7 +1,0 @@
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/nav_graph" app:startDestination="@id/homeFragment">
-    <fragment android:id="@+id/homeFragment" android:name="com.example.fitlog.ui.home.HomeFragment" android:label="Home"/>
-    <fragment android:id="@+id/wardrobeFragment" android:name="com.example.fitlog.ui.wardrobe.WardrobeFragment" android:label="Wardrobe"/>
-    <fragment android:id="@+id/outfitsFragment" android:name="com.example.fitlog.ui.outfits.OutfitsFragment" android:label="Outfits"/>
-</navigation>
