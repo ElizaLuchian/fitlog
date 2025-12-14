@@ -6,7 +6,7 @@ const http = require('http');
 const { Pool } = require('pg');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // Middleware
 app.use(cors());
@@ -229,6 +229,23 @@ app.delete('/api/items/:id', async (req, res) => {
 
 // ============ OUTFITS ENDPOINTS ============
 
+function toOutfitDto(row) {
+  if (!row) return row;
+
+  return {
+    outfitId: row.outfit_id,
+    occasion: row.occasion,
+    aestheticStyleType: row.aesthetic_style_type,
+    photo: row.photo,
+    notes: row.notes,
+    dateWorn: row.date_worn,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    items: row.items ?? []
+  };
+}
+
+
 // GET all outfits (with items array)
 app.get('/api/outfits', async (req, res) => {
   try {
@@ -246,7 +263,7 @@ app.get('/api/outfits', async (req, res) => {
     `);
     
     console.log(`GET /api/outfits - Returning ${result.rows.length} outfits`);
-    res.json(result.rows);
+    res.json(result.rows.map(toOutfitDto));
   } catch (error) {
     console.error('Error fetching outfits:', error);
     res.status(500).json({ error: 'Failed to fetch outfits', details: error.message });
@@ -275,7 +292,7 @@ app.get('/api/outfits/:id', async (req, res) => {
     }
     
     console.log(`GET /api/outfits/${id}`);
-    res.json(result.rows[0]);
+    res.json(toOutfitDto(result.rows[0]));
   } catch (error) {
     console.error('Error fetching outfit:', error);
     res.status(500).json({ error: 'Failed to fetch outfit', details: error.message });
@@ -287,16 +304,16 @@ app.post('/api/outfits', async (req, res) => {
   const client = await pool.connect();
   
   try {
-    const { occasion, aestheticStyleType, notes, dateWorn, items } = req.body;
+    const { occasion, aestheticStyleType, photo, notes, dateWorn, items } = req.body;
     
     await client.query('BEGIN');
     
     // Insert outfit
     const outfitResult = await client.query(
-      `INSERT INTO outfits (occasion, aesthetic_style_type, notes, date_worn)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO outfits (occasion, aesthetic_style_type, photo, notes, date_worn)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [occasion, aestheticStyleType, notes, dateWorn]
+      [occasion, aestheticStyleType, photo, notes, dateWorn]
     );
     
     const outfit = outfitResult.rows[0];
@@ -321,7 +338,7 @@ app.post('/api/outfits', async (req, res) => {
     // Broadcast to all connected clients
     broadcast({
       type: 'OUTFIT_CREATED',
-      outfit
+      outfit: toOutfitDto(outfit)
     });
     
     res.status(201).json(outfit);
@@ -340,18 +357,18 @@ app.put('/api/outfits/:id', async (req, res) => {
   
   try {
     const { id } = req.params;
-    const { occasion, aestheticStyleType, notes, dateWorn, items } = req.body;
+    const { occasion, aestheticStyleType, photo, notes, dateWorn, items } = req.body;
     
     await client.query('BEGIN');
     
     // Update outfit
     const result = await client.query(
       `UPDATE outfits 
-       SET occasion = $1, aesthetic_style_type = $2, notes = $3, 
-           date_worn = $4, updated_at = CURRENT_TIMESTAMP
-       WHERE outfit_id = $5
+       SET occasion = $1, aesthetic_style_type = $2, photo = $3, notes = $4, 
+           date_worn = $5, updated_at = CURRENT_TIMESTAMP
+       WHERE outfit_id = $6
        RETURNING *`,
-      [occasion, aestheticStyleType, notes, dateWorn, id]
+      [occasion, aestheticStyleType, photo, notes, dateWorn, id]
     );
     
     if (result.rows.length === 0) {
@@ -384,7 +401,7 @@ app.put('/api/outfits/:id', async (req, res) => {
     // Broadcast to all connected clients
     broadcast({
       type: 'OUTFIT_UPDATED',
-      outfit
+      outfit: toOutfitDto(outfit)
     });
     
     res.json(outfit);

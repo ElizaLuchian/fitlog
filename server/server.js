@@ -236,6 +236,7 @@ function toOutfitDto(row) {
     outfitId: row.outfit_id,
     occasion: row.occasion,
     aestheticStyleType: row.aesthetic_style_type,
+    photo: row.photo,
     notes: row.notes,
     dateWorn: row.date_worn,
     createdAt: row.created_at,
@@ -303,16 +304,16 @@ app.post('/api/outfits', async (req, res) => {
   const client = await pool.connect();
   
   try {
-    const { occasion, aestheticStyleType, notes, dateWorn, items } = req.body;
+    const { occasion, aestheticStyleType, photo, notes, dateWorn, items } = req.body;
     
     await client.query('BEGIN');
     
     // Insert outfit
     const outfitResult = await client.query(
-      `INSERT INTO outfits (occasion, aesthetic_style_type, notes, date_worn)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO outfits (occasion, aesthetic_style_type, photo, notes, date_worn)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [occasion, aestheticStyleType, notes, dateWorn]
+      [occasion, aestheticStyleType, photo, notes, dateWorn]
     );
     
     const outfit = outfitResult.rows[0];
@@ -356,18 +357,18 @@ app.put('/api/outfits/:id', async (req, res) => {
   
   try {
     const { id } = req.params;
-    const { occasion, aestheticStyleType, notes, dateWorn, items } = req.body;
+    const { occasion, aestheticStyleType, photo, notes, dateWorn, items } = req.body;
     
     await client.query('BEGIN');
     
     // Update outfit
     const result = await client.query(
       `UPDATE outfits 
-       SET occasion = $1, aesthetic_style_type = $2, notes = $3, 
-           date_worn = $4, updated_at = CURRENT_TIMESTAMP
-       WHERE outfit_id = $5
+       SET occasion = $1, aesthetic_style_type = $2, photo = $3, notes = $4, 
+           date_worn = $5, updated_at = CURRENT_TIMESTAMP
+       WHERE outfit_id = $6
        RETURNING *`,
-      [occasion, aestheticStyleType, notes, dateWorn, id]
+      [occasion, aestheticStyleType, photo, notes, dateWorn, id]
     );
     
     if (result.rows.length === 0) {
